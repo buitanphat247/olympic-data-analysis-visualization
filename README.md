@@ -92,9 +92,22 @@ BTL_PYTHON/
 - Python 3.8+
 - pip
 
+### Tạo môi trường ảo (khuyến nghị)
+
+```bash
+# Tạo virtual environment
+python3 -m venv venv
+
+# Kích hoạt môi trường ảo
+# Linux/Mac:
+source venv/bin/activate
+# Windows:
+# venv\Scripts\activate
+```
+
 ### Cài đặt
 
-Chỉ cần chạy một lệnh duy nhất:
+Sau khi kích hoạt môi trường ảo, chạy một lệnh duy nhất:
 
 ```bash
 python main.py
