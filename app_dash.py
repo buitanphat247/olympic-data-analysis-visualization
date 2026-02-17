@@ -294,22 +294,69 @@ def update_tab_content(tab, use_cleaned, years, nocs, sports, sexes, medals, top
             dbc.Row(dbc.Col(dcc.Graph(id='physique-comparison', figure=create_animated_physique_comparison(phys), style={'height': '500px'}), width=12)),
         ], fluid=True)
         elif tab == 'data':
+            max_rows = min(1000, len(df))
             return dbc.Container([
-            dbc.Alert(html.Small(f"Hiển thị tối đa 1.000 dòng — Tổng {len(df):,} bản ghi sau lọc"), color="light", className="mb-3"),
+            dbc.Alert([
+                html.Small(f"Hiển thị tối đa {max_rows:,} dòng — Tổng {len(df):,} bản ghi sau lọc. "),
+                html.Small("Dùng pagination ở dưới để xem thêm.", className="text-muted")
+            ], color="light", className="mb-3"),
             dbc.Card([
-                dbc.CardBody(
+                dbc.CardBody([
                     dash_table.DataTable(
-                        data=df.head(1000).to_dict('records'),
+                        data=df.head(max_rows).to_dict('records'),
                         columns=[{"name": i, "id": i} for i in df.columns],
                         page_size=50,
-                        style_table={'overflowX': 'auto'},
-                        style_cell={'textAlign': 'left'},
-                        style_header={'backgroundColor': 'var(--bs-primary)', 'color': 'white', 'fontWeight': '600'},
-                        style_data_conditional=[{"if": {"row_index": "odd"}, "backgroundColor": "rgba(0,0,0,.03)"}],
+                        page_action='native',
+                        page_current=0,
+                        sort_action='native',
+                        sort_mode='multi',
+                        filter_action='native',
+                        fixed_rows={'headers': True},
+                        style_table={
+                            'overflowX': 'auto',
+                            'overflowY': 'auto',
+                            'maxHeight': '600px',
+                            'minWidth': '100%',
+                        },
+                        style_cell={
+                            'textAlign': 'left',
+                            'padding': '10px',
+                            'fontSize': '13px',
+                            'fontFamily': 'Inter, sans-serif',
+                            'whiteSpace': 'normal',
+                            'height': 'auto',
+                            'minWidth': '80px',
+                            'maxWidth': '200px',
+                        },
+                        style_header={
+                            'backgroundColor': 'var(--bs-primary)',
+                            'color': 'white',
+                            'fontWeight': '600',
+                            'textAlign': 'center',
+                            'position': 'sticky',
+                            'top': 0,
+                            'zIndex': 1,
+                        },
+                        style_data={
+                            'whiteSpace': 'normal',
+                            'height': 'auto',
+                        },
+                        style_data_conditional=[
+                            {"if": {"row_index": "odd"}, "backgroundColor": "rgba(0,0,0,.03)"},
+                            {"if": {"state": "selected"}, "backgroundColor": "rgba(0, 123, 255, 0.1)"},
+                        ],
+                        style_filter={
+                            'backgroundColor': '#f8f9fa',
+                            'padding': '8px',
+                        },
+                        css=[{
+                            'selector': '.dash-table-tooltip',
+                            'rule': 'font-family: Inter, sans-serif;'
+                        }],
                     )
-                )
+                ])
             ], className="shadow-sm"),
-        ], fluid=True)
+        ], fluid=True, className="px-2")
         return html.Div("Tab không hợp lệ")
     except Exception as e:
         return dbc.Alert([html.Strong("Lỗi hiển thị: "), str(e)], color="danger")
