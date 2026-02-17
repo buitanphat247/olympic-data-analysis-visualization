@@ -70,8 +70,10 @@ Thumbs.db
 *.png
 *.jpg
 *.jpeg
-# Giữ lại public/ và output/chart/ nếu cần
+# Giữ lại public/ và output/chart/
 !public/*.png
 !public/*.jpg
 !public/*.jpeg
-# !output/chart/*.png
+!output/chart/*.png
+!output/chart/*.jpg
+!output/chart/*.jpeg
